@@ -44,6 +44,9 @@ void adReadA0(void);
 void main(void);
 void sys(int duty);
 
+// Define output.
+#define ledRed PORTCbits.RC0
+
 // Define PWM duty-cycle.
 int pwm=0;
 
@@ -80,8 +83,8 @@ void init(void){
     ADCON1 = 0b10001110;
     
     // Extern Interruption 
-    OPTION_REG = 0b00000111;
-    INTCON = 0b10100000;
+    OPTION_REG = 0b10000111;
+    INTCON = 0b10110000;
     // Timer Zero
     TMR0 = 236;
     
@@ -119,6 +122,7 @@ void interrupt ISR(void)
         INTCONbits.INTF = 0;
         acquire();
     }
+    
 }
 
 void main(void) {
@@ -345,6 +349,7 @@ void run(int duty){
         // Wait for it.
         duty = 100;
     }
+    ledRed = 1;
     set_pwm(duty);
     // Wait for it.
     acquire();
@@ -371,7 +376,9 @@ void status(void){
 void stop(void){
     set_pwm(0);
     stepEnable = 0;
-        acquirement = 0;
+    acquirement = 0;
+    ledRed = 1;
+
 }
 
 unsigned int sampling (void){
